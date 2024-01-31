@@ -294,93 +294,7 @@ bool Account::save_to_local()
     return save(db) == 0;
 }
 
-/**
- * public function to sub transaction amount from account balances
- */
-bool Account::balances_sub(Transaction *txn)
-{
-    qDebug("balances_add bal_future=%f, txn->amount=%f, txn->status=%d", bal_future, txn->amount, txn->status);
-    bal_future -= txn->amount;
-    bal_today -= txn->amount;
-    qDebug("after balances_add bal_future=%f, txn->amount=%f", bal_future, txn->amount);
 
-    if(txn->status == TXN_STATUS_CLEARED)
-        bal_clear -= txn->amount;
-
-    if(txn->status == TXN_STATUS_RECONCILED)
-    {
-        bal_recon -= txn->amount;
-        bal_clear -= txn->amount;
-    }
-//    save_to_local();
-    return true;
-}
-
-
-/**
- * public function to add transaction amount from account balances
- */
-bool Account::balances_add(Transaction *txn)
-{
-    qDebug("balances_add bal_future=%f, txn->amount=%f", bal_future, txn->amount);
-    bal_future += txn->amount;
-    bal_today += txn->amount;
-
-    if(txn->status == TXN_STATUS_CLEARED)
-        bal_clear += txn->amount;
-
-    if(txn->status == TXN_STATUS_RECONCILED)
-    {
-        bal_recon += txn->amount;
-        bal_clear += txn->amount;
-    }
-//    save_to_local();
-    return true;
-}
-
-
-//todo: optim called 2 times from dsp_mainwindow
-void Account::compute_balances(Transaction *txn, Account* acc)
-{
-    qDebug("compute_balances starting..., txn->type=%s", txn->type.toStdString().c_str());
-
-    if (txn == nullptr){
-        qWarning("invalid arg");
-        return;
-    }
-    bool needSave = false;
-    if (acc == nullptr) needSave = true;
-    if (txn->type == TXN_TYPE_EXPENSE || txn->type == TXN_TYPE_INCOME) {
-        if (acc == nullptr){
-            auto sacc = Preferences::get_item<Account>(txn->account);
-            if(sacc != nullptr) {
-                sacc.get()->balances_add(txn);
-            } else {
-                qWarning("[W]compute_balances failed, can't find account(%s)", txn->account.toStdString().c_str());
-            }
-        } else {
-            acc->balances_add(txn);
-        }
-    } else if (txn->type == TXN_TYPE_TRANSFER) {
-        if (acc == nullptr){
-            auto fromacc = Preferences::get_item<Account>(txn->account);
-            if (fromacc != nullptr) acc = fromacc.get();
-        }
-        auto toacc = Preferences::get_item<Account>(txn->xfer_account);
-        if(acc != nullptr && toacc != nullptr) {
-            acc->balances_add(txn);
-            toacc->balances_sub(txn);
-        }
-        if (toacc != nullptr && toacc.get() != nullptr){
-            toacc->save_to_local();
-        }
-    }
-    if (needSave && acc != nullptr){
-        acc->save_to_local();
-    }
-
-    qDebug("compute_balances end");
-}
 
 void Account::compute_balances(const QString& accID)
 {
@@ -389,18 +303,12 @@ void Account::compute_balances(const QString& accID)
         QList<QSharedPointer<Account>>::iterator iter = acclist.begin();
         while(iter != acclist.end()){
             qDebug("compute_balances account(%s)", iter->get()->name.toStdString().c_str());
-            QList<QSharedPointer<Transaction>> txnlist = Transaction::get_all_by_account(iter->get()->id);
-            iter->get()->bal_clear = iter->get()->initial;
-            iter->get()->bal_recon = iter->get()->initial;
-            iter->get()->bal_today = iter->get()->initial;
-            iter->get()->bal_future = iter->get()->initial;
-            QList<QSharedPointer<Transaction>>::iterator txniter = txnlist.begin();
-            while(txniter != txnlist.end()){
-                printf("[%s %s:%d]txn(%s)\n", __FILE__, __FUNCTION__, __LINE__, txniter->get()->id.toStdString().c_str());
-                compute_balances(txniter->get(), iter->get());
-                printf("[%s %s:%d]\n", __FILE__, __FUNCTION__, __LINE__);
-                ++txniter;
-            }
+            double clear = 0, recon = 0, today = 0, future = 0;
+            Transaction::sum_by_account(iter->get()->id, future, today, clear, recon);
+            iter->get()->bal_clear = iter->get()->initial + clear;
+            iter->get()->bal_recon = iter->get()->initial + recon;
+            iter->get()->bal_today = iter->get()->initial + today;
+            iter->get()->bal_future = iter->get()->initial + future;
             printf("[%s %s:%d]\n", __FILE__, __FUNCTION__, __LINE__);
             iter->get()->save_to_local();
             printf("[%s %s:%d]\n", __FILE__, __FUNCTION__, __LINE__);
@@ -409,17 +317,14 @@ void Account::compute_balances(const QString& accID)
     } else {
         auto acc = Preferences::get_item<Account>(accID);
         if (acc == nullptr) return;
-        acc.get()->bal_clear = acc.get()->initial;
-        acc.get()->bal_recon = acc.get()->initial;
-        acc.get()->bal_today = acc.get()->initial;
-        acc.get()->bal_future = acc.get()->initial;
-        acc.get()->save_to_local();
-        QList<QSharedPointer<Transaction>> txnlist = Transaction::get_all_by_account(accID);
-        QList<QSharedPointer<Transaction>>::iterator txniter = txnlist.begin();
-        while(txniter != txnlist.end()){
-            compute_balances(txniter->get());
-            ++txniter;
-        }
+        double clear = 0, recon = 0, today = 0, future = 0;
+        Transaction::sum_by_account(acc->id, future, today, clear, recon);
+        acc->bal_clear = acc->initial + clear;
+        acc->bal_recon = acc->initial + recon;
+        acc->bal_today = acc->initial + today;
+        acc->bal_future = acc->initial + future;
+        acc->save_to_local();
+        delete acc;
     }
 }
 

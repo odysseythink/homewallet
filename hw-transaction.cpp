@@ -224,3 +224,67 @@ QList<QSharedPointer<Transaction> > Transaction::get_all_by_account(const QStrin
     if (acc != "") where= QString("where account='%1'").arg(acc);
     return Preferences::get_all<Transaction>(where);
 }
+
+bool Transaction::sum_by_account(const QString& acc, double &bal_future, double& bal_today, double& bal_clear, double& bal_recon)
+{
+    if (Preferences::Instance()->XHWFilepath() == ""){
+        qWarning("no xhw file defined");
+        return false;
+    }
+    {
+        QSqlDatabase db = Preferences::Instance()->currentDatabase();
+        if (db.isOpen()) {
+            qDebug() << "Database opened successfully£¡";
+        } else {
+            qDebug("can't open database(%s) because:%s",Preferences::Instance()->XHWFilepath().toStdString().c_str(), db.lastError().text().toStdString().c_str());
+            return false;
+        }
+        QSqlQuery query(db);
+        QString sql = QString("select status,sum(amount) from t_transactions where account = '%1' group by status;").arg(acc);
+        if (!query.exec(sql)){
+            qDebug("query sql(%s) failed:%s",sql.toStdString().c_str(), db.lastError().text().toStdString().c_str());
+            return false;
+        }
+        bal_clear = 0;
+        bal_recon = 0;
+        bal_today = 0;
+        bal_future = 0;
+        while (query.next()){
+            int status = query.value(0).toInt();
+            double amount = query.value(1).toDouble();
+            bal_today += amount;
+            bal_future += amount;
+
+            if(status == TXN_STATUS_CLEARED)
+                bal_clear += amount;
+
+            if(status == TXN_STATUS_RECONCILED)
+            {
+                bal_recon += amount;
+                bal_clear += amount;
+            }
+        }
+        sql = QString("select status,sum(amount) from t_transactions where xfer_account = '%1' and type = '%2' group by status;").arg(acc).arg(TXN_TYPE_TRANSFER);
+        if (!query.exec(sql)){
+            qDebug("query sql(%s) failed:%s",sql.toStdString().c_str(), db.lastError().text().toStdString().c_str());
+            return false;
+        }
+        while (query.next()){
+            int status = query.value(0).toInt();
+            double amount = query.value(1).toDouble();
+            bal_today -= amount;
+            bal_future -= amount;
+
+            if(status == TXN_STATUS_CLEARED)
+                bal_clear -= amount;
+
+            if(status == TXN_STATUS_RECONCILED)
+            {
+                bal_recon -= amount;
+                bal_clear -= amount;
+            }
+        }
+    }
+
+    return true;
+}

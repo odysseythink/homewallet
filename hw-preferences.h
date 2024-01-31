@@ -220,7 +220,7 @@ public:
         return retval;
     }
     template<typename T>
-    static QSharedPointer<T> get_item(const QString& key){
+    static T* get_item(const QString& key){
         printf("[%s %s:%d]\n", __FILE__, __FUNCTION__, __LINE__);
         T* pItem = new T();
         IHWFileIO* pIOObject = dynamic_cast<IHWFileIO *>(pItem);
@@ -230,19 +230,31 @@ public:
         }
         printf("[%s %s:%d]\n", __FILE__, __FUNCTION__, __LINE__);
         QString where = QString("where %1='%2'").arg(pIOObject->PrimaryKey()).arg(key);
-        auto list = Preferences::get_all<T>(where);
-        if (list.size() == 0){
+        if (Preferences::Instance()->XHWFilepath() == ""){
+            qWarning("no xhw file defined");
             delete pItem;
-            printf("[%s %s:%d]\n", __FILE__, __FUNCTION__, __LINE__);
             return nullptr;
-        } else {
-            printf("[%s %s:%d]\n", __FILE__, __FUNCTION__, __LINE__);
-            QSharedPointer<T> res = QSharedPointer<T>(list[0].get());
-            list.clear();
-            printf("[%s %s:%d]\n", __FILE__, __FUNCTION__, __LINE__);
-            delete pItem;
-            return res;
         }
+        {
+            QSqlDatabase db = Preferences::Instance()->currentDatabase();
+            if (db.isOpen()) {
+                qDebug() << "Database opened successfully！";
+            } else {
+                qDebug("can't open database(%s) because:%s",Preferences::Instance()->XHWFilepath().toStdString().c_str(), db.lastError().text().toStdString().c_str());
+                delete pItem;
+                return nullptr;
+            }
+            QSqlQuery query(db);
+            QString sql = QString("select * from %1 where %2='%3';").arg(pIOObject->Tabname()).arg(pIOObject->PrimaryKey()).arg(key);
+            qDebug("IHWFileIO::get_item sql=%s", sql.toStdString().c_str());
+            query.exec(sql);
+            if (query.next()) {
+                pIOObject->LoadFromSqlQuery(query);
+                pItem;
+            }
+        }
+        delete pItem;
+        return nullptr;
     }
 
 private:

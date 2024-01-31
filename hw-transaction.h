@@ -50,6 +50,7 @@ public:
     bool is_balanceable();
     bool add_to_local();
     static QList<QSharedPointer<Transaction>> get_all_by_account(const QString& acc = "");
+    static bool sum_by_account(const QString& acc, double &bal_future, double& bal_today, double& bal_clear, double& bal_recon);
 
 public:
     QString id;

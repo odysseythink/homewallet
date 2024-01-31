@@ -50,7 +50,7 @@ Category::Category(Category *other)
 
 Category::~Category()
 {
-
+    printf("[%s %s:%d]\n", __FILE__, __FUNCTION__, __LINE__);
 }
 
 QString Category::CreateTableSql()
@@ -163,7 +163,30 @@ QMap<QString, QString> Category::get_all_fullnames(const QString &type)
     return res;
 }
 
-QList<QStandardItem*> Category::ParseCategoriesToItems(const QString parentname,QList<QSharedPointer<Category> > &list, QMap<QString, QString>* fullnames)
+QMap<QString, QString> Category::get_all_leaf_fullnames(const QString &type)
+{
+    printf("[%s %s:%d]\n", __FILE__, __FUNCTION__, __LINE__);
+    QList<QSharedPointer<Category> > list = get_all_by_type(type);
+    QMap<QString, QString> res;
+    if (list.size() > 0){
+        QMap<QString, QString> fullnames;
+        QStringList leafs;
+//        printf("[%s %s:%d]fullnames.size()=%d\n", __FILE__, __FUNCTION__, __LINE__, fullnames.size());
+        auto items = ParseCategoriesToItems("", list, &fullnames, &leafs);
+        for(auto id : leafs){
+            if(fullnames.contains(id)){
+                qWarning("id(%s) not in fullnames", id.toStdString().c_str());
+            } else {
+                res[id] = fullnames[id];
+            }
+        }
+        return res;
+    }
+//    printf("[%s %s:%d]\n", __FILE__, __FUNCTION__, __LINE__);
+    return res;
+}
+
+QList<QStandardItem*> Category::ParseCategoriesToItems(const QString parentname,QList<QSharedPointer<Category> > &list, QMap<QString, QString>* fullnames, QStringList* leafs)
 {
     qDebug("------------list.size()=%d", list.size());
     QList<QStandardItem*> items;
@@ -197,6 +220,10 @@ QList<QStandardItem*> Category::ParseCategoriesToItems(const QString parentname,
         auto tmpsubitems = ParseCategoriesToItems(items[iLoop]->data().toMap()["id"].toString(), list, fullnames);
         if (tmpsubitems.size() > 0){
             items[iLoop]->appendRows(tmpsubitems);
+        } else {
+            if (leafs != nullptr){
+                *leafs << items[iLoop]->data().toMap()["id"].toString();
+            }
         }
     }
     return items;

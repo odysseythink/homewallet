@@ -97,10 +97,7 @@ public:
 
     bool has_website();
     void set_currency(const QString currency);
-    static void compute_balances(Transaction *txn, Account* acc = nullptr);
     static void compute_balances(const QString& acc = "");
-    bool balances_add(Transaction *txn);
-    bool balances_sub(Transaction *txn);
     void convert_euro();
     static void update_to_local(Account* acc);
     static void del_from_local(Account* acc);

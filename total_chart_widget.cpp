@@ -111,15 +111,18 @@ TotalChartWidget::~TotalChartWidget()
 void TotalChartWidget::__Update()
 {
     m_iSeries->clear();
-//    QMap<QString, QString> list = Category::get_all_fullnames("");
-//    QMap<QString, QString>::iterator iter = list.begin();
-//    while (iter != list.end()) {
-//        auto cat = Preferences::get_item<Category>(iter.key());
-//        if (cat != nullptr && cat.get() != nullptr){
+    QMap<QString, QString> list = Category::get_all_fullnames("");
+    QMap<QString, QString>::iterator iter = list.begin();
+    while (iter != list.end()) {
+        printf("[%s %s:%d]\n", __FILE__, __FUNCTION__, __LINE__);
+        auto cat = Preferences::get_item<Category>(iter.key());
+        printf("[%s %s:%d]\n", __FILE__, __FUNCTION__, __LINE__);
+        if (cat != nullptr){
 
-//        }
-//        ++iter;
-//    }
+            delete cat;
+        }
+        ++iter;
+    }
     *m_iSeries << new CustomSlice("Slice 1", 10.0);
     *m_iSeries << new CustomSlice("Slice 2", 20.0);
     *m_iSeries << new CustomSlice("Slice 3", 30.0);

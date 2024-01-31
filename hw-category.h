@@ -28,7 +28,8 @@ public:
     static bool del_from_local(const QString& id);
     static bool update_type_to_local(const QString& id, const QString& type);
     static QMap<QString, QString> get_all_fullnames(const QString& type);
-    static QList<QStandardItem*> ParseCategoriesToItems(const QString parentname,QList<QSharedPointer<Category> > &list, QMap<QString, QString>* fullnames = nullptr);
+    static QMap<QString, QString> get_all_leaf_fullnames(const QString& type);
+    static QList<QStandardItem*> ParseCategoriesToItems(const QString parentname,QList<QSharedPointer<Category> > &list, QMap<QString, QString>* fullnames = nullptr, QStringList* leafs = nullptr);
 
 public:
     QString type;

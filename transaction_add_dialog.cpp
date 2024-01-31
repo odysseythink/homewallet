@@ -118,9 +118,13 @@ void TransactionAddDialog::on_buttonBox_accepted()
         QMessageBox::warning(this, "add transaction", "add transaction failed because zero amount");
         return;
     }
+    if (ui->fromAccountCBox->currentText() == ui->paymentAndToAccountCBox->currentText() && ui->transferRBtn->isChecked()){
+        QMessageBox::warning(this, "add transaction", "add transaction failed because transfer is invalid in the same account");
+        return;
+    }
     m_Transaction.created_at = ui->createdEdit->dateTime();
+    m_Transaction.amount = ui->amountEdit->value();
     if (ui->transferRBtn->isChecked()) m_Transaction.xfer_amount = ui->amountEdit->value();
-    else m_Transaction.amount = ui->amountEdit->value();
     m_Transaction.account = ui->fromAccountCBox->currentData().toString();
     if (ui->transferRBtn->isChecked()) m_Transaction.xfer_account = ui->paymentAndToAccountCBox->currentData().toString();
     else m_Transaction.paymode = ui->paymentAndToAccountCBox->currentData().toInt();
@@ -136,7 +140,6 @@ void TransactionAddDialog::on_buttonBox_accepted()
     m_Transaction.memo = ui->memoEdit->text();
     m_Transaction.memo = ui->infoEdit->text();
     if (m_Transaction.add_to_local()){
-        Account::compute_balances(&m_Transaction);
         emit sigTransactionChanged();
     }
 }
