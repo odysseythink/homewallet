@@ -43,3 +43,6 @@
 /build/
 
 *.pro.user
+
+.stignore
+/.stfolder/
