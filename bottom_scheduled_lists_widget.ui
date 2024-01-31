@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>BottomScheduledListsWidget</class>
+ <widget class="QWidget" name="BottomScheduledListsWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>705</width>
+    <height>452</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>5</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QTreeWidget" name="treeWidget">
+     <column>
+      <property name="text">
+       <string>Late</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Still</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Next date</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Payee</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Category</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Memo</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Expense</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Income</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Account</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

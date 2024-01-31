@@ -1,0 +1,656 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWin</class>
+ <widget class="QMainWindow" name="MainWin">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWin</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="res/res.qrc">
+    <normaloff>:/img/lucky-cat.svg</normaloff>:/img/lucky-cat.svg</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="spacing">
+       <number>5</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="AccountSumWidget" name="m_iAccountSumWidget" native="true">
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QTabWidget" name="tabWidget">
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <widget class="TotalChartWidget" name="m_iTotalChartWidget">
+         <attribute name="title">
+          <string>Total chart</string>
+         </attribute>
+        </widget>
+        <widget class="TimeChartWidget" name="m_iTimeChartWidget">
+         <attribute name="title">
+          <string>Time chart</string>
+         </attribute>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="BottomListsWidget" name="m_iBottomListsWidget" native="true"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="m_iFileMenu">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <widget class="QMenu" name="m_iOpenRecentMenu">
+     <property name="title">
+      <string>Open _Recent</string>
+     </property>
+    </widget>
+    <addaction name="m_iNewAction"/>
+    <addaction name="m_iOpenAction"/>
+    <addaction name="m_iOpenRecentMenu"/>
+    <addaction name="separator"/>
+    <addaction name="m_iSaveAction"/>
+    <addaction name="m_iSaveAsAction"/>
+    <addaction name="separator"/>
+    <addaction name="m_iImportAction"/>
+    <addaction name="m_iExportAsQIFAction"/>
+    <addaction name="separator"/>
+    <addaction name="m_iRevertAction"/>
+    <addaction name="m_iRestoreBackupAction"/>
+    <addaction name="separator"/>
+    <addaction name="m_iPropertiesAction"/>
+    <addaction name="separator"/>
+    <addaction name="m_iCloseAction"/>
+    <addaction name="m_iQuitAction"/>
+   </widget>
+   <widget class="QMenu" name="m_iEditMenu">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="m_iPreferencesAction"/>
+   </widget>
+   <widget class="QMenu" name="m_iViewMenu">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="m_iShowToolbarAction"/>
+    <addaction name="m_iShowTotalChartAction"/>
+    <addaction name="m_iShowTimeChartAction"/>
+    <addaction name="m_iShowBottomListsAction"/>
+    <addaction name="m_iShowEuroMinorAction"/>
+   </widget>
+   <widget class="QMenu" name="m_iManageMenu">
+    <property name="title">
+     <string>Manage</string>
+    </property>
+    <addaction name="m_iMgrWalletAction"/>
+    <addaction name="m_iMgrAccountsAction"/>
+    <addaction name="m_iMgrPayeesAction"/>
+    <addaction name="m_iMgrCategoriesAction"/>
+    <addaction name="m_iMgrScheduledTemplateAction"/>
+    <addaction name="m_iMgrBudgetAction"/>
+    <addaction name="m_iMgrBudgetTableViewAction"/>
+    <addaction name="m_iMgrAssignmentsAction"/>
+    <addaction name="m_iMgrCurrenciesAction"/>
+    <addaction name="m_iMgrTagsAction"/>
+   </widget>
+   <widget class="QMenu" name="m_iTransactionsMenu">
+    <property name="title">
+     <string>Transactions</string>
+    </property>
+    <addaction name="m_iAddTransAction"/>
+    <addaction name="m_iShowTransAction"/>
+    <addaction name="m_iShowAllTransAction"/>
+    <addaction name="separator"/>
+    <addaction name="m_iSetSchedulerAction"/>
+    <addaction name="m_iPostScheduledAction"/>
+   </widget>
+   <widget class="QMenu" name="m_iReportsMenu">
+    <property name="title">
+     <string>Reports</string>
+    </property>
+    <addaction name="m_iReportsStatisticsAction"/>
+    <addaction name="m_iReportsTrendTimeAction"/>
+    <addaction name="m_iReportsBalanceAction"/>
+    <addaction name="m_iReportsBudgetAction"/>
+    <addaction name="m_iReportsVehicleCostAction"/>
+   </widget>
+   <widget class="QMenu" name="m_iToolsMenu">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="m_iShowWelcomeDialogAction"/>
+    <addaction name="m_iFileStatisticsAction"/>
+    <addaction name="separator"/>
+    <addaction name="m_iAnonymizeAction"/>
+   </widget>
+   <widget class="QMenu" name="m_iHelpMenu">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="m_iContentsAction"/>
+    <addaction name="m_iGetHelpOnlineAction"/>
+    <addaction name="separator"/>
+    <addaction name="m_iCheckForUpdatesAction"/>
+    <addaction name="m_iReleaseNotesAction"/>
+    <addaction name="m_iReportProblemAction"/>
+    <addaction name="m_iTranslateAction"/>
+    <addaction name="separator"/>
+    <addaction name="m_iAboutAction"/>
+   </widget>
+   <addaction name="m_iFileMenu"/>
+   <addaction name="m_iEditMenu"/>
+   <addaction name="m_iViewMenu"/>
+   <addaction name="m_iManageMenu"/>
+   <addaction name="m_iTransactionsMenu"/>
+   <addaction name="m_iReportsMenu"/>
+   <addaction name="m_iToolsMenu"/>
+   <addaction name="m_iHelpMenu"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="m_iToolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <action name="m_iNewAction">
+   <property name="icon">
+    <iconset resource="res/res.qrc">
+     <normaloff>:/img/hicolor_actions_24x24_hb-document-new.png</normaloff>:/img/hicolor_actions_24x24_hb-document-new.png</iconset>
+   </property>
+   <property name="text">
+    <string>New</string>
+   </property>
+  </action>
+  <action name="m_iOpenAction">
+   <property name="icon">
+    <iconset resource="res/res.qrc">
+     <normaloff>:/img/hicolor_actions_24x24_hb-document-open.png</normaloff>:/img/hicolor_actions_24x24_hb-document-open.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open...</string>
+   </property>
+  </action>
+  <action name="action1">
+   <property name="text">
+    <string>1</string>
+   </property>
+  </action>
+  <action name="m_iSaveAction">
+   <property name="icon">
+    <iconset resource="res/res.qrc">
+     <normaloff>:/img/hicolor_actions_24x24_hb-document-save.png</normaloff>:/img/hicolor_actions_24x24_hb-document-save.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="m_iSaveAsAction">
+   <property name="icon">
+    <iconset resource="res/res.qrc">
+     <normaloff>:/img/hicolor_actions_24x24_hb-document-save-as.png</normaloff>:/img/hicolor_actions_24x24_hb-document-save-as.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save As...</string>
+   </property>
+  </action>
+  <action name="m_iImportAction">
+   <property name="icon">
+    <iconset resource="res/res.qrc">
+     <normaloff>:/img/hicolor_actions_24x24_hb-file-import.png</normaloff>:/img/hicolor_actions_24x24_hb-file-import.png</iconset>
+   </property>
+   <property name="text">
+    <string>Import...</string>
+   </property>
+  </action>
+  <action name="m_iExportAsQIFAction">
+   <property name="text">
+    <string>Export as QIF...</string>
+   </property>
+  </action>
+  <action name="m_iRevertAction">
+   <property name="text">
+    <string>Revert</string>
+   </property>
+  </action>
+  <action name="m_iRestoreBackupAction">
+   <property name="text">
+    <string>Restore backup</string>
+   </property>
+  </action>
+  <action name="m_iPropertiesAction">
+   <property name="text">
+    <string>Properties...</string>
+   </property>
+  </action>
+  <action name="m_iCloseAction">
+   <property name="text">
+    <string>Close</string>
+   </property>
+  </action>
+  <action name="m_iQuitAction">
+   <property name="text">
+    <string>Quit</string>
+   </property>
+  </action>
+  <action name="m_iPreferencesAction">
+   <property name="text">
+    <string>Preferences...</string>
+   </property>
+  </action>
+  <action name="m_iShowToolbarAction">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Toolbar</string>
+   </property>
+  </action>
+  <action name="m_iShowTotalChartAction">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Total Chart</string>
+   </property>
+  </action>
+  <action name="m_iShowTimeChartAction">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Time Chart</string>
+   </property>
+  </action>
+  <action name="m_iShowBottomListsAction">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Bottom Lists</string>
+   </property>
+  </action>
+  <action name="m_iShowEuroMinorAction">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Euro minor</string>
+   </property>
+  </action>
+  <action name="m_iMgrWalletAction">
+   <property name="text">
+    <string>Wallet...</string>
+   </property>
+  </action>
+  <action name="m_iMgrAccountsAction">
+   <property name="icon">
+    <iconset resource="res/res.qrc">
+     <normaloff>:/img/hicolor_actions_24x24_hb-account.png</normaloff>:/img/hicolor_actions_24x24_hb-account.png</iconset>
+   </property>
+   <property name="text">
+    <string>Accounts...</string>
+   </property>
+  </action>
+  <action name="m_iMgrPayeesAction">
+   <property name="icon">
+    <iconset resource="res/res.qrc">
+     <normaloff>:/img/hicolor_actions_24x24_hb-payee.png</normaloff>:/img/hicolor_actions_24x24_hb-payee.png</iconset>
+   </property>
+   <property name="text">
+    <string>Payees...</string>
+   </property>
+  </action>
+  <action name="m_iMgrCategoriesAction">
+   <property name="icon">
+    <iconset resource="res/res.qrc">
+     <normaloff>:/img/hicolor_actions_24x24_hb-category.png</normaloff>:/img/hicolor_actions_24x24_hb-category.png</iconset>
+   </property>
+   <property name="text">
+    <string>Categories...</string>
+   </property>
+  </action>
+  <action name="m_iMgrScheduledTemplateAction">
+   <property name="icon">
+    <iconset resource="res/res.qrc">
+     <normaloff>:/img/hicolor_actions_24x24_hb-archive.png</normaloff>:/img/hicolor_actions_24x24_hb-archive.png</iconset>
+   </property>
+   <property name="text">
+    <string>Scheduled/Template...</string>
+   </property>
+  </action>
+  <action name="m_iMgrBudgetAction">
+   <property name="icon">
+    <iconset resource="res/res.qrc">
+     <normaloff>:/img/hicolor_actions_24x24_hb-budget.png</normaloff>:/img/hicolor_actions_24x24_hb-budget.png</iconset>
+   </property>
+   <property name="text">
+    <string>Budget...</string>
+   </property>
+  </action>
+  <action name="m_iMgrBudgetTableViewAction">
+   <property name="text">
+    <string>Budget (table view)...</string>
+   </property>
+  </action>
+  <action name="m_iMgrAssignmentsAction">
+   <property name="icon">
+    <iconset resource="res/res.qrc">
+     <normaloff>:/img/hicolor_actions_24x24_hb-assign.png</normaloff>:/img/hicolor_actions_24x24_hb-assign.png</iconset>
+   </property>
+   <property name="text">
+    <string>Assignments...</string>
+   </property>
+  </action>
+  <action name="m_iMgrCurrenciesAction">
+   <property name="icon">
+    <iconset resource="res/res.qrc">
+     <normaloff>:/img/hicolor_actions_24x24_hb-currency.png</normaloff>:/img/hicolor_actions_24x24_hb-currency.png</iconset>
+   </property>
+   <property name="text">
+    <string>Currencies...</string>
+   </property>
+  </action>
+  <action name="m_iMgrTagsAction">
+   <property name="text">
+    <string>Tags...</string>
+   </property>
+  </action>
+  <action name="m_iAddTransAction">
+   <property name="icon">
+    <iconset resource="res/res.qrc">
+     <normaloff>:/img/hicolor_actions_24x24_hb-ope-add.png</normaloff>:/img/hicolor_actions_24x24_hb-ope-add.png</iconset>
+   </property>
+   <property name="text">
+    <string>Add...</string>
+   </property>
+  </action>
+  <action name="m_iShowTransAction">
+   <property name="icon">
+    <iconset resource="res/res.qrc">
+     <normaloff>:/img/hicolor_actions_24x24_hb-ope-show.png</normaloff>:/img/hicolor_actions_24x24_hb-ope-show.png</iconset>
+   </property>
+   <property name="text">
+    <string>Show...</string>
+   </property>
+  </action>
+  <action name="m_iShowAllTransAction">
+   <property name="text">
+    <string>Show all...</string>
+   </property>
+  </action>
+  <action name="m_iSetSchedulerAction">
+   <property name="text">
+    <string>Set scheduler...</string>
+   </property>
+  </action>
+  <action name="m_iPostScheduledAction">
+   <property name="text">
+    <string>Post scheduled</string>
+   </property>
+  </action>
+  <action name="m_iReportsStatisticsAction">
+   <property name="icon">
+    <iconset resource="res/res.qrc">
+     <normaloff>:/img/hicolor_actions_24x24_hb-rep-stats.png</normaloff>:/img/hicolor_actions_24x24_hb-rep-stats.png</iconset>
+   </property>
+   <property name="text">
+    <string>Statistics...</string>
+   </property>
+  </action>
+  <action name="m_iReportsTrendTimeAction">
+   <property name="icon">
+    <iconset resource="res/res.qrc">
+     <normaloff>:/img/hicolor_actions_24x24_hb-rep-time.png</normaloff>:/img/hicolor_actions_24x24_hb-rep-time.png</iconset>
+   </property>
+   <property name="text">
+    <string>Trend Time...</string>
+   </property>
+  </action>
+  <action name="m_iReportsBalanceAction">
+   <property name="icon">
+    <iconset resource="res/res.qrc">
+     <normaloff>:/img/hicolor_actions_24x24_hb-rep-balance.png</normaloff>:/img/hicolor_actions_24x24_hb-rep-balance.png</iconset>
+   </property>
+   <property name="text">
+    <string>Balance...</string>
+   </property>
+  </action>
+  <action name="m_iReportsBudgetAction">
+   <property name="icon">
+    <iconset resource="res/res.qrc">
+     <normaloff>:/img/hicolor_actions_24x24_hb-rep-budget.png</normaloff>:/img/hicolor_actions_24x24_hb-rep-budget.png</iconset>
+   </property>
+   <property name="text">
+    <string>Budget...</string>
+   </property>
+  </action>
+  <action name="m_iReportsVehicleCostAction">
+   <property name="icon">
+    <iconset resource="res/res.qrc">
+     <normaloff>:/img/hicolor_actions_24x24_hb-rep-vehicle.png</normaloff>:/img/hicolor_actions_24x24_hb-rep-vehicle.png</iconset>
+   </property>
+   <property name="text">
+    <string>Vehicle cost...</string>
+   </property>
+  </action>
+  <action name="m_iShowWelcomeDialogAction">
+   <property name="text">
+    <string>Show welcome dialog...</string>
+   </property>
+  </action>
+  <action name="m_iFileStatisticsAction">
+   <property name="text">
+    <string>File statistics...</string>
+   </property>
+  </action>
+  <action name="m_iAnonymizeAction">
+   <property name="text">
+    <string>Anonymize...</string>
+   </property>
+  </action>
+  <action name="m_iContentsAction">
+   <property name="text">
+    <string>Contents</string>
+   </property>
+  </action>
+  <action name="m_iGetHelpOnlineAction">
+   <property name="icon">
+    <iconset resource="res/res.qrc">
+     <normaloff>:/img/hicolor_actions_24x24_hb-help.png</normaloff>:/img/hicolor_actions_24x24_hb-help.png</iconset>
+   </property>
+   <property name="text">
+    <string>Get Help Online...</string>
+   </property>
+  </action>
+  <action name="m_iCheckForUpdatesAction">
+   <property name="text">
+    <string>Check for updates...</string>
+   </property>
+  </action>
+  <action name="m_iReleaseNotesAction">
+   <property name="text">
+    <string>Release Notes</string>
+   </property>
+  </action>
+  <action name="m_iReportProblemAction">
+   <property name="text">
+    <string>Report a Problem...</string>
+   </property>
+  </action>
+  <action name="m_iTranslateAction">
+   <property name="text">
+    <string>Translate this Application...</string>
+   </property>
+  </action>
+  <action name="m_iAboutAction">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>AccountSumWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">account_sum_widget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TotalChartWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">total_chart_widget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TimeChartWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">time_chart_widget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BottomListsWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">bottom_lists_widget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="res/res.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>m_iNewAction</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWin</receiver>
+   <slot>__action_new()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_iMgrAccountsAction</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWin</receiver>
+   <slot>__action_mgr()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_iMgrCategoriesAction</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWin</receiver>
+   <slot>__action_mgr()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_iMgrPayeesAction</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWin</receiver>
+   <slot>__action_mgr()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_iAddTransAction</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWin</receiver>
+   <slot>__action_mgr()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>__action_new()</slot>
+  <slot>__action_mgr()</slot>
+ </slots>
+</ui>
