@@ -46,3 +46,4 @@
 
 .stignore
 /.stfolder/
+*.autosave
