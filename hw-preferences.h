@@ -267,6 +267,7 @@ private:
 public:
     QSqlTableModel* m_iAccountsModel;
     QSqlTableModel* m_iPayeeModel;
+    QSqlTableModel* m_iTransactionModel;
     QString connectionname;
 	//general
     bool	showsplash;

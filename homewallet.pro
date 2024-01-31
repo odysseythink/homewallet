@@ -44,7 +44,7 @@ SOURCES += \
     payee_mgr_dialog.cpp \
     time_chart_widget.cpp \
     total_chart_widget.cpp \
-    transaction_add_widget.cpp \
+    transaction_add_dialog.cpp \
     transaction_mgr_dialog.cpp \
     ui-widgets-data.cpp
 
@@ -78,7 +78,7 @@ HEADERS += \
     payee_mgr_dialog.h \
     time_chart_widget.h \
     total_chart_widget.h \
-    transaction_add_widget.h \
+    transaction_add_dialog.h \
     transaction_mgr_dialog.h
 
 FORMS += \
@@ -96,7 +96,7 @@ FORMS += \
     payee_mgr_dialog.ui \
     time_chart_widget.ui \
     total_chart_widget.ui \
-    transaction_add_widget.ui \
+    transaction_add_dialog.ui \
     transaction_mgr_dialog.ui
 
 TRANSLATIONS += \

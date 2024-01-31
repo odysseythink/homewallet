@@ -7,7 +7,8 @@
 #include "account_mgr_dialog.h"
 #include "category_mgr_dialog.h"
 #include "payee_mgr_dialog.h"
-#include "transaction_add_widget.h"
+#include "transaction_add_dialog.h"
+#include "transaction_mgr_dialog.h"
 
 MainWin::MainWin(QWidget *parent)
     : QMainWindow(parent)
@@ -87,7 +88,12 @@ void MainWin::__action_mgr()
         delete pDialog;
     } else if (pAction == ui->m_iAddTransAction){
         auto kacc = ui->m_iAccountSumWidget->GetCurrentAccount();
-        TransactionAddWidget* pDialog = new TransactionAddWidget(kacc, this);
+        TransactionAddDialog* pDialog = new TransactionAddDialog(kacc, this);
+        connect(pDialog, SIGNAL(sigTransactionChanged()), ui->m_iAccountSumWidget, SLOT(Update()));
+        pDialog->exec();
+        delete pDialog;
+    } else if (pAction == ui->m_iShowTransAction){
+        TransactionMgrDialog* pDialog = new TransactionMgrDialog(this);
         connect(pDialog, SIGNAL(sigTransactionChanged()), ui->m_iAccountSumWidget, SLOT(Update()));
         pDialog->exec();
         delete pDialog;

@@ -1,13 +1,13 @@
-#include "transaction_add_widget.h"
-#include "ui_transaction_add_widget.h"
+#include "transaction_add_dialog.h"
+#include "ui_transaction_add_dialog.h"
 #include <QDateTime>
 #include "hw-account.h"
 #include "home_wallet.h"
 #include <QMessageBox>
 
-TransactionAddWidget::TransactionAddWidget(QString kacc, QWidget *parent) :
+TransactionAddDialog::TransactionAddDialog(QString kacc, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::TransactionAddWidget)
+    ui(new Ui::TransactionAddDialog)
 {
     ui->setupUi(this);
     __Update();
@@ -15,12 +15,12 @@ TransactionAddWidget::TransactionAddWidget(QString kacc, QWidget *parent) :
     m_Transaction.account = kacc;
 }
 
-TransactionAddWidget::~TransactionAddWidget()
+TransactionAddDialog::~TransactionAddDialog()
 {
     delete ui;
 }
 
-void TransactionAddWidget::__Update()
+void TransactionAddDialog::__Update()
 {
     if (ui->expenseRBtn->isChecked()){
         ui->amountEdit->setMinimum(-2147483647.00);
@@ -80,35 +80,35 @@ void TransactionAddWidget::__Update()
     __UpdateData();
 }
 
-void TransactionAddWidget::__UpdateData()
+void TransactionAddDialog::__UpdateData()
 {
     if(ui->expenseRBtn->isChecked())m_Transaction.type = TXN_TYPE_EXPENSE;
     else if(ui->incomeRBtn->isChecked())m_Transaction.type = TXN_TYPE_INCOME;
     else if(ui->transferRBtn->isChecked())m_Transaction.type = TXN_TYPE_TRANSFER;
 }
 
-void TransactionAddWidget::on_expenseRBtn_clicked()
+void TransactionAddDialog::on_expenseRBtn_clicked()
 {
     ui->accountAndFromLbl->setText("Account:");
     ui->paymentAndToLbl->setText("Payment:");
     __Update();
 }
 
-void TransactionAddWidget::on_incomeRBtn_clicked()
+void TransactionAddDialog::on_incomeRBtn_clicked()
 {
     ui->accountAndFromLbl->setText("Account:");
     ui->paymentAndToLbl->setText("Payment:");
     __Update();
 }
 
-void TransactionAddWidget::on_transferRBtn_clicked()
+void TransactionAddDialog::on_transferRBtn_clicked()
 {
     ui->accountAndFromLbl->setText("From:");
     ui->paymentAndToLbl->setText("To:");
     __Update();
 }
 
-void TransactionAddWidget::on_buttonBox_accepted()
+void TransactionAddDialog::on_buttonBox_accepted()
 {
     if (ui->fromAccountCBox->count() <= 0){
         QMessageBox::warning(this, "add transaction", "add transaction failed because no account provided");

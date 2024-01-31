@@ -13,7 +13,7 @@ PayeeMgrDialog::PayeeMgrDialog(QWidget *parent) :
     ui(new Ui::PayeeMgrDialog)
 {
     ui->setupUi(this);
-    if(Preferences::Instance()->m_iAccountsModel != nullptr){
+    if(Preferences::Instance()->m_iPayeeModel != nullptr){
         ui->payeeTableView->setModel(Preferences::Instance()->m_iPayeeModel);
     }
     __Update();

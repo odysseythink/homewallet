@@ -5,16 +5,16 @@
 #include "hw-transaction.h"
 
 namespace Ui {
-class TransactionAddWidget;
+class TransactionAddDialog;
 }
 
-class TransactionAddWidget : public QDialog
+class TransactionAddDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit TransactionAddWidget(QString kacc = "", QWidget *parent = nullptr);
-    ~TransactionAddWidget();
+    explicit TransactionAddDialog(QString kacc = "", QWidget *parent = nullptr);
+    ~TransactionAddDialog();
 
 private:
     void __Update();
@@ -33,7 +33,7 @@ signals:
     void sigTransactionChanged();
 
 private:
-    Ui::TransactionAddWidget *ui;
+    Ui::TransactionAddDialog *ui;
     Transaction m_Transaction;
 };
 

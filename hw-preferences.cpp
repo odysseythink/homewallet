@@ -215,6 +215,7 @@ Preferences::Preferences()
 {
     m_iAccountsModel = nullptr;
     m_iPayeeModel = nullptr;
+    m_iTransactionModel = nullptr;
     sync();
     setdefault();
     load();
@@ -257,6 +258,12 @@ QSqlError Preferences::addConnection(const QString &driver, const QString &dbNam
     }
     m_iPayeeModel = new QSqlTableModel(nullptr, db);
     m_iPayeeModel->setTable("t_payee");
+    if (m_iTransactionModel != nullptr){
+        delete m_iTransactionModel;
+        m_iTransactionModel = nullptr;
+    }
+    m_iTransactionModel = new QSqlTableModel(nullptr, db);
+    m_iTransactionModel->setTable("t_transactions");
 
     return err;
 }
@@ -275,6 +282,10 @@ void Preferences::__removeOldConnection()
     if (m_iPayeeModel != nullptr){
         delete m_iPayeeModel;
         m_iPayeeModel = nullptr;
+    }
+    if (m_iTransactionModel != nullptr){
+        delete m_iTransactionModel;
+        m_iTransactionModel = nullptr;
     }
 }
 
