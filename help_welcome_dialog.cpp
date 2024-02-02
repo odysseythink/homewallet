@@ -7,7 +7,7 @@ HelpWelcomeDialog::HelpWelcomeDialog(QWidget *parent) :
     ui(new Ui::HelpWelcomeDialog)
 {
     ui->setupUi(this);
-    Preferences::Instance()->showwelcome = ui->m_iShowCheckBox->isChecked();
+    Preferences::Instance()->set_showwelcome(ui->m_iShowCheckBox->isChecked());
 }
 
 HelpWelcomeDialog::~HelpWelcomeDialog()
@@ -35,7 +35,7 @@ void HelpWelcomeDialog::__OnWelcomsBtnClicked()
     } else {
         QCheckBox* pCheckBox = qobject_cast<QCheckBox*>(sender());
         if (pCheckBox == ui->m_iShowCheckBox) {
-            Preferences::Instance()->showwelcome = ui->m_iShowCheckBox->isChecked();
+            Preferences::Instance()->set_showwelcome(ui->m_iShowCheckBox->isChecked());
         }
     }
 }

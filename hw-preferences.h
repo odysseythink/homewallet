@@ -119,10 +119,30 @@ struct WinGeometry
     int		l, t, w, h, s;
 };
 
+class AppDir {
+public:
+    AppDir();
+    ~AppDir();
+    void build_package_paths ();
+    void check_app_dir();
+    QString app_get_config_dir(){return config_dir;}
+    QString app_get_images_dir(){return images_dir;}
+    QString app_get_pixmaps_dir(){return pixmaps_dir;}
+    QString app_get_locale_dir(){return locale_dir;}
+    QString app_get_help_dir(){return help_dir;}
+    QString app_get_datas_dir(){return datas_dir;}
+
+private:
+    QString config_dir ;
+    QString images_dir ;
+    QString pixmaps_dir;
+    QString locale_dir ;
+    QString help_dir   ;
+    QString datas_dir  ;
+};
 
 
-
-class Preferences : public QSettings
+class Preferences : public QSettings, public AppDir
 {
     Q_OBJECT
 
@@ -134,12 +154,9 @@ public:
         return m_iInstance;
     }
     int list_column_get(int *cols_id, int uid, int maxcol);
-    void setdefault_lst_det_columns();
-    void setdefault_lst_ope_columns();
-    void setdefault_win();
     bool load();
-    void setdefault();
-
+    void outputLog(const QString &type, const char* file, const char* func, int line, const QString &msg);
+    ~Preferences();
     enum
     {
       SORT_ASCENDING,
@@ -206,7 +223,7 @@ public:
                 sql=QString("select * from %1;").arg(pIOObject->Tabname());
             }
             if (sql.endsWith(";;")) sql = sql.left(sql.size()-1);
-            qDebug("IHWFileIO::get_all sql=%s", sql.toStdString().c_str());
+            qDebug("sql=%s", sql.toStdString().c_str());
             query.exec(sql);
             while (query.next()) {
                 T *pNewItem = new T();
@@ -246,7 +263,7 @@ public:
             }
             QSqlQuery query(db);
             QString sql = QString("select * from %1 where %2='%3';").arg(pIOObject->Tabname()).arg(pIOObject->PrimaryKey()).arg(key);
-            qDebug("IHWFileIO::get_item sql=%s", sql.toStdString().c_str());
+            qDebug("sql=%s", sql.toStdString().c_str());
             query.exec(sql);
             if (query.next()) {
                 pIOObject->LoadFromSqlQuery(query);
@@ -256,10 +273,106 @@ public:
         delete pItem;
         return nullptr;
     }
+    void file_ensure_xhb(QString filename);
+    void backup_current_file();
+    bool showwelcome(){
+        qDebug(" -> ** General");
+        if (!contains("General")){
+            qCritical("no General group in preference");
+            return true;
+        }
+        QVariantMap groupsetting = value("General").toMap();
+        if(!groupsetting.contains("ShowWelcome")) return true;
+        return groupsetting.value("ShowWelcome").toBool();
+    }
+    void set_showwelcome(bool val){
+        QVariantMap groupsetting;
+        if (contains("General")){
+            qWarning("no General group in preference");
+            groupsetting = value("General").toMap();
+        }
+        groupsetting["ShowWelcome"] = val;
+        setValue("General", groupsetting);
+    }
+    bool includeremind(){
+        qDebug(" -> ** General");
+        if (!contains("General")){
+            qCritical("no General group in preference");
+            return true;
+        }
+        QVariantMap groupsetting = value("General").toMap();
+        if(!groupsetting.contains("IncludeRemind")) return true;
+        return groupsetting.value("IncludeRemind").toBool();
+    }
+    void set_includeremind(bool val){
+        QVariantMap groupsetting;
+        if (contains("General")){
+            qWarning("no General group in preference");
+            groupsetting = value("General").toMap();
+        }
+        groupsetting["IncludeRemind"] = val;
+        setValue("General", groupsetting);
+    }
+    bool BakIsAutomatic(){
+        qDebug(" -> ** General");
+        if (!contains("General")){
+            qCritical("no General group in preference");
+            return true;
+        }
+        QVariantMap groupsetting = value("General").toMap();
+        if(!groupsetting.contains("BakIsAutomatic")) return true;
+        return groupsetting.value("BakIsAutomatic").toBool();
+    }
+    void SetBakIsAutomatic(bool val){
+        QVariantMap groupsetting;
+        if (contains("General")){
+            qWarning("no General group in preference");
+            groupsetting = value("General").toMap();
+        }
+        groupsetting["BakIsAutomatic"] = val;
+        setValue("General", groupsetting);
+    }
 
+    int BakMaxNumCopies(){
+        qDebug(" -> ** General");
+        if (!contains("General")){
+            qCritical("no General group in preference");
+            return true;
+        }
+        QVariantMap groupsetting = value("General").toMap();
+        if(!groupsetting.contains("BakMaxNumCopies")) return true;
+        return groupsetting.value("BakMaxNumCopies").toBool();
+    }
+    void SetBakIsAutomatic(int val){
+        QVariantMap groupsetting;
+        if (contains("General")){
+            qWarning("no General group in preference");
+            groupsetting = value("General").toMap();
+        }
+        groupsetting["BakMaxNumCopies"] = val;
+        setValue("General", groupsetting);
+    }
+    QString BackupPath(){
+        qDebug(" -> ** General");
+        if (!contains("General")){
+            qCritical("no General group in preference");
+            return QDir::homePath();
+        }
+        QVariantMap groupsetting = value("General").toMap();
+        if(!groupsetting.contains("BackupPath")) return QDir::homePath();
+        return groupsetting.value("BackupPath").toString();
+    }
+    void SetBackupPath(QString val){
+        QVariantMap groupsetting;
+        if (contains("General")){
+            qWarning("no General group in preference");
+            groupsetting = value("General").toMap();
+        }
+        groupsetting["BackupPath"] = val;
+        setValue("General", groupsetting);
+    }
 private:
     static void __init_wingeometry(struct WinGeometry *wg, int l, int t, int w, int h);
-    void __init_measurement_units();
     void __loadGeneral(uint32_t& version);
     void __loadWindows(uint32_t& version);
     void __loadPanels(uint32_t& version);
@@ -273,200 +386,30 @@ private:
     void __get_wingeometry(QString strVal,  struct WinGeometry *storage);
     QList<int> __get_integer_list(QString strVal);
     void __currfmt_convert(Currency *cur, QString prefix, QString suffix);
-    int __upgrade_560_daterange(int oldrange);
     void __removeOldConnection();
+    bool __file_delete_existing(const QString filepath);
+    bool __file_copy(const QString srcfile, const QString dstfile);
 
 public:
     QSqlTableModel* m_iAccountsModel;
     QSqlTableModel* m_iPayeeModel;
     QSqlTableModel* m_iTransactionModel;
     QString connectionname;
-	//general
-    bool	showsplash;
-    bool	showwelcome;
-    bool	loadlast;
-    bool	appendscheduled;
-    bool	do_update_currency;
-
-	//top spending
-    //int		date_range_wal;
-    int		rep_maxspenditems;
-
-	//interface
-    short		toolbar_style;
-    short		grid_lines;
-    bool	gtk_override;
-    short		gtk_fontsize;
-    bool	gtk_darktheme;
-
-    bool	icon_symbolic;
-    bool	custom_colors;
-    QString color_exp;
-    QString color_inc;
-    QString color_warn;
-
-	//locale
-    QString language;
-    QString date_format;
-    short		fisc_year_day;
-    short		fisc_year_month;
-    bool	vehicle_unit_ismile;	// true if unit is mile, default Km
-    bool	vehicle_unit_isgal;		// true if unit is gallon, default Liter
-
-	//transactions
-	//-- register
-    int		date_range_txn;
-    int		date_future_nbdays;
-    bool	hidereconciled;
-    bool    showremind;
-    bool    showvoid;
-    bool	includeremind;
-    bool	lockreconciled;
-	//-- dialog
-    bool	heritdate;
-    bool	txn_memoacp;
-    short		txn_xfer_daygap;
-    bool	txn_xfer_syncstat;
-    short		txn_memoacp_days;
-    bool	txn_showconfirm;
-
-	//import/export
-    int		dtex_datefmt;
-    int		dtex_daygap;
-    int		dtex_ofxname;
-    int		dtex_ofxmemo;
-    bool	dtex_qifmemo;
-    bool	dtex_qifswap;
-    bool	dtex_ucfirst;
-    int		dtex_csvsep;
-
-	//report options
-    int		date_range_rep;
-    int		report_color_scheme;
-    bool	rep_smallfont;
-    bool	stat_byamount;
-    bool	stat_showrate;
-    bool	stat_showdetail;
-    bool	stat_includexfer;
-    bool	budg_showdetail;
-	//5.7
-    bool	rep_forcast;
-    int		rep_forecat_nbmonth;
-		
-
-	//backup option
-    bool	bak_is_automatic;
-    short		bak_max_num_copies;
-
-	//folders
-    QString path_hbfile;
-    QString path_hbbak;
-    QString path_import;
-    QString path_export;
-    QString path_attach;
-
-	//currency api
-    QString api_rate_url;
-    QString api_rate_key;
-
-	//euro zone
-    bool	euro_active;
-    int		euro_country;
-    double		euro_value;
-    Currency	*minor_cur;
-
-
-	//---- others data (not in pref dialog) -----
-    bool	dtex_nointro;
-    bool	dtex_dodefpayee;
-    bool	dtex_doautoassign;
-
-    QString	    IntCurrSymbol;
-
-    int 		lst_impope_columns[NUM_LST_DSPOPE+1];
-
-	//register list column
-    int 		lst_ope_columns[NUM_LST_DSPOPE+1];
-    int 		lst_ope_col_width[NUM_LST_DSPOPE+1];
-    int		lst_ope_sort_id;	// -- implicit --
-    int		lst_ope_sort_order; // -- implicit --
-
-	//detail list column
-    int 		lst_det_columns[NUM_LST_DSPOPE+1];
-    int 		lst_det_col_width[NUM_LST_DSPOPE+1];
-
-	/* windows/dialogs size an position */
-	struct WinGeometry	wal_wg;
-	struct WinGeometry	acc_wg;
-	
-	struct WinGeometry	sta_wg;
-	struct WinGeometry	tme_wg;
-	struct WinGeometry	ove_wg;
-	struct WinGeometry	bud_wg;
-	struct WinGeometry	cst_wg;
-
-	struct WinGeometry	txn_wg;
-	struct WinGeometry	dbud_wg;
-
-	// main window stuffs 
-    bool	wal_toolbar;
-    bool	wal_totchart;
-    bool	wal_timchart;
-    bool	wal_upcoming;
-
-    int		wal_vpaned;
-    int		wal_hpaned;
-
-	//home panel
-    short		pnl_acc_col_acc_width;
-    int 		lst_acc_columns[NUM_LST_COL_DSPACC+1];
-    short		pnl_acc_show_by;
-
-	//hub total/time
-    short		hub_tot_view;
-    short		hub_tot_range;
-    short		hub_tim_view;
-    short		hub_tim_range;
-
-    short		pnl_upc_col_pay_show;
-    short		pnl_upc_col_pay_width;
-    short		pnl_upc_col_cat_show;
-    short		pnl_upc_col_cat_width;
-    short		pnl_upc_col_mem_show;
-    short		pnl_upc_col_mem_width;
-    int		pnl_upc_range;
-	
-    QString pnl_list_tab;
-
-	//vehiclecost units (mile/gal or km/liters)
-	
-    QString vehicle_unit_dist0;
-    QString vehicle_unit_dist1;
-    QString vehicle_unit_vol;
-    QString vehicle_unit_100;
-    QString vehicle_unit_distbyvol;
+    QString currency;
+    unsigned int changes_count;
 
 private:
-    void __NoLink();
     explicit Preferences();
-    ~Preferences(){}
     static Preferences* m_iInstance;
     QSqlDatabase m_DB;
+
+    QMutex          m_mutex;
+    QString m_LogPath;
+    QDateTime m_LastLogTime;
+    QFile* m_iLogFile;
+    QTextStream* m_iLogStream;
 };
 
-//int homebank_pref_list_column_get(int *cols_id, int uid, int maxcol);
-
-//void homebank_pref_setdefault_lst_ope_columns(void);
-//void homebank_pref_setdefault_lst_det_columns(void);
-//void homebank_pref_setdefault_win(void);
-//void homebank_prefs_set_default(void);
-//void homebank_pref_free(void);
-//void homebank_pref_createformat(void);
-//void homebank_pref_init_measurement_units(void);
-
-//void homebank_pref_apply(void);
-//bool homebank_pref_load(void);
-//bool homebank_pref_save(void);
-//void homebank_pref_setdefault(void);
+void LogHandler(QtMsgType type, const QMessageLogContext &info, const QString &msg);
 
 #endif

@@ -54,17 +54,17 @@ void MainWin::__InitToolsbar()
 /* hbfile action functions -------------------- */
 void MainWin::__action_new()
 {
-    QDir dir(HomeWallet::Instance()->app_get_datas_dir());
+    QDir dir(Preferences::Instance()->app_get_datas_dir());
     if(!dir.exists()){
-        dir.mkpath(HomeWallet::Instance()->app_get_datas_dir());
+        dir.mkpath(Preferences::Instance()->app_get_datas_dir());
     }
-    QString defaultfilename = QDir(HomeWallet::Instance()->app_get_datas_dir()).absoluteFilePath("untitled.xhw");
+    QString defaultfilename = QDir(Preferences::Instance()->app_get_datas_dir()).absoluteFilePath("untitled.xhw");
 
     QString filename = QFileDialog::getSaveFileName(this, "wallet filename", defaultfilename, "*.xhw");
     if (filename != ""){
-        HomeWallet::Instance()->backup_current_file();
+        Preferences::Instance()->backup_current_file();
         QFile::remove(Preferences::Instance()->XHWFilepath());
-        HomeWallet::Instance()->file_ensure_xhb(filename);
+        Preferences::Instance()->file_ensure_xhb(filename);
         IHWFileIO::new_xml(Preferences::Instance()->XHWFilepath());
         setWindowTitle(QString("home wallet %1").arg(Preferences::Instance()->XHWFilepath()));
     }
@@ -107,9 +107,9 @@ bool MainWin::__savechanges()
 {
     bool retval = true;
 
-    if(HomeWallet::Instance()->changes_count)
+    if(Preferences::Instance()->changes_count)
     {
-        QMessageBox::StandardButton ret = QMessageBox::question(this, "Save changes to the file before closing?", QString("If you don't save, changes will be permanently lost.\nNumber of changes: %1.").arg(HomeWallet::Instance()->changes_count));
+        QMessageBox::StandardButton ret = QMessageBox::question(this, "Save changes to the file before closing?", QString("If you don't save, changes will be permanently lost.\nNumber of changes: 0."));
 
         if(ret == QMessageBox::No) {
             retval = false;
@@ -117,8 +117,8 @@ bool MainWin::__savechanges()
             qDebug(" + should quick save %s\n", Preferences::Instance()->XHWFilepath().toStdString().c_str());
             //todo: should migrate this
             //#1720377 also backup
-            HomeWallet::Instance()->file_ensure_xhb("");
-            HomeWallet::Instance()->backup_current_file();
+            Preferences::Instance()->file_ensure_xhb("");
+            Preferences::Instance()->backup_current_file();
             homebank_save_xml(Preferences::Instance()->XHWFilepath());
         }
     }

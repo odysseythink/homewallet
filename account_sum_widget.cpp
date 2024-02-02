@@ -36,7 +36,7 @@ void AccountSumWidget::Update()
 
 void AccountSumWidget::__Update()
 {
-    qDebug("AccountSumWidget::__Update");
+    qDebug("...");
     Account::compute_balances();
     ui->treeWidget->clear();
     QMap<int, QString>::iterator iter = HomeWallet::CYA_ACC_TYPE.begin();

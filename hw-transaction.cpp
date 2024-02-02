@@ -205,7 +205,7 @@ bool retval = true;
     if( status ==  TXN_STATUS_VOID )
 		retval = false;
 	//#1812598
-    else if( (status == TXN_STATUS_REMIND) && (Preferences::Instance()->includeremind == false) )
+    else if( (status == TXN_STATUS_REMIND) && (Preferences::Instance()->includeremind() == false) )
 		retval = false;
 
 	   return retval;
@@ -234,7 +234,7 @@ bool Transaction::sum_by_account(const QString& acc, double &bal_future, double&
     {
         QSqlDatabase db = Preferences::Instance()->currentDatabase();
         if (db.isOpen()) {
-            qDebug() << "Database opened successfully£¡";
+            qDebug() << "Database opened successfullyï¼";
         } else {
             qDebug("can't open database(%s) because:%s",Preferences::Instance()->XHWFilepath().toStdString().c_str(), db.lastError().text().toStdString().c_str());
             return false;
@@ -283,6 +283,35 @@ bool Transaction::sum_by_account(const QString& acc, double &bal_future, double&
                 bal_recon -= amount;
                 bal_clear -= amount;
             }
+        }
+    }
+
+    return true;
+}
+
+bool Transaction::sum_by_category(const QString &cat, double &amount)
+{
+    if (Preferences::Instance()->XHWFilepath() == ""){
+        qWarning("no xhw file defined");
+        return false;
+    }
+    {
+        QSqlDatabase db = Preferences::Instance()->currentDatabase();
+        if (db.isOpen()) {
+            qDebug() << "Database opened successfullyï¼";
+        } else {
+            qDebug("can't open database(%s) because:%s",Preferences::Instance()->XHWFilepath().toStdString().c_str(), db.lastError().text().toStdString().c_str());
+            return false;
+        }
+        QSqlQuery query(db);
+        QString sql = QString("select sum(amount) from t_transactions where category = '%1';").arg(cat);
+        if (!query.exec(sql)){
+            qDebug("query sql(%s) failed:%s",sql.toStdString().c_str(), db.lastError().text().toStdString().c_str());
+            return false;
+        }
+        amount = 0;
+        if (query.next()){
+            amount = query.value(0).toDouble();
         }
     }
 

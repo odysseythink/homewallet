@@ -39,26 +39,5 @@ void Tag::LoadFromSqlQuery(QSqlQuery &query)
 
 QString Tag::tags_tostring(QStringList tags)
 {
-    int i;
-    QStringList tptr;
-    QString tagstring;
-
-    qDebug("\n[tags] tostring\n" );
-    if( tags.size() == 0 )
-    {
-        return "";
-    }
-    else
-    {
-        for(i=0;i<tags.size();i++)
-        {
-            HomeWallet::Instance()->h_tag[tags[i]];
-            if( HomeWallet::Instance()->h_tag.contains(tags[i]) && HomeWallet::Instance()->h_tag[tags[i]] != nullptr)
-            {
-                tptr << HomeWallet::Instance()->h_tag[tags[i]]->name;
-            }
-        }
-        tagstring = tptr.join(" ");
-    }
-    return tagstring;
+    return tags.join(" ");
 }

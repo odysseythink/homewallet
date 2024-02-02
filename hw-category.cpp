@@ -165,7 +165,7 @@ QMap<QString, QString> Category::get_all_fullnames(const QString &type)
 
 QMap<QString, QString> Category::get_all_leaf_fullnames(const QString &type)
 {
-    printf("[%s %s:%d]\n", __FILE__, __FUNCTION__, __LINE__);
+//    printf("[%s %s:%d]\n", __FILE__, __FUNCTION__, __LINE__);
     QList<QSharedPointer<Category> > list = get_all_by_type(type);
     QMap<QString, QString> res;
     if (list.size() > 0){
@@ -174,7 +174,8 @@ QMap<QString, QString> Category::get_all_leaf_fullnames(const QString &type)
 //        printf("[%s %s:%d]fullnames.size()=%d\n", __FILE__, __FUNCTION__, __LINE__, fullnames.size());
         auto items = ParseCategoriesToItems("", list, &fullnames, &leafs);
         for(auto id : leafs){
-            if(fullnames.contains(id)){
+            qDebug() << "--leaf id" << id;
+            if(!fullnames.contains(id)){
                 qWarning("id(%s) not in fullnames", id.toStdString().c_str());
             } else {
                 res[id] = fullnames[id];
@@ -188,7 +189,7 @@ QMap<QString, QString> Category::get_all_leaf_fullnames(const QString &type)
 
 QList<QStandardItem*> Category::ParseCategoriesToItems(const QString parentname,QList<QSharedPointer<Category> > &list, QMap<QString, QString>* fullnames, QStringList* leafs)
 {
-    qDebug("------------list.size()=%d", list.size());
+//    qDebug("------------list.size()=%d", list.size());
     QList<QStandardItem*> items;
     if (list.size() == 0){
         return items;
@@ -204,23 +205,23 @@ QList<QStandardItem*> Category::ParseCategoriesToItems(const QString parentname,
             data["name"] = pCategory->name;
             data["type"] = pCategory->type;
             if (fullnames != nullptr){
-//                printf("[%s %s:%d]pCategory->id=%s\n", __FILE__, __FUNCTION__, __LINE__, pCategory->id.toStdString().c_str());
                 (*fullnames)[pCategory->id] =  (parentname == ""?"":(*fullnames)[pCategory->parent]+":") + pCategory->name;
+                qDebug() << "---category(" <<pCategory->id << ") full name=" << (*fullnames)[pCategory->id];
             }
             QStandardItem* pItem = new QStandardItem(pCategory->name);
             pItem->setData(data);
             items.append(pItem);
             iter = list.erase(iter);
-//            auto sublist = __ParseCategoriesToItems(pCategory->name, );
         } else {
             ++iter;
         }
     }
     for (int iLoop = 0; iLoop < items.size(); iLoop++){
-        auto tmpsubitems = ParseCategoriesToItems(items[iLoop]->data().toMap()["id"].toString(), list, fullnames);
+        auto tmpsubitems = ParseCategoriesToItems(items[iLoop]->data().toMap()["id"].toString(), list, fullnames, leafs);
         if (tmpsubitems.size() > 0){
             items[iLoop]->appendRows(tmpsubitems);
         } else {
+            qDebug() << "---category(" << items[iLoop]->data().toMap()["id"].toString() << ") is leaf";
             if (leafs != nullptr){
                 *leafs << items[iLoop]->data().toMap()["id"].toString();
             }

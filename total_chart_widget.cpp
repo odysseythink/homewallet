@@ -111,22 +111,19 @@ TotalChartWidget::~TotalChartWidget()
 void TotalChartWidget::__Update()
 {
     m_iSeries->clear();
-    QMap<QString, QString> list = Category::get_all_fullnames("");
+    QMap<QString, QString> list = Category::get_all_leaf_fullnames("");
     QMap<QString, QString>::iterator iter = list.begin();
     while (iter != list.end()) {
-        printf("[%s %s:%d]\n", __FILE__, __FUNCTION__, __LINE__);
-        auto cat = Preferences::get_item<Category>(iter.key());
-        printf("[%s %s:%d]\n", __FILE__, __FUNCTION__, __LINE__);
-        if (cat != nullptr){
-
-            delete cat;
-        }
+        double amount = 0.;
+        qDebug("------leaf %s", iter.value().toStdString().c_str());
+        Transaction::sum_by_category(iter.key(), amount);
+        *m_iSeries << new CustomSlice(iter.value(), amount);
         ++iter;
     }
-    *m_iSeries << new CustomSlice("Slice 1", 10.0);
-    *m_iSeries << new CustomSlice("Slice 2", 20.0);
-    *m_iSeries << new CustomSlice("Slice 3", 30.0);
-    *m_iSeries << new CustomSlice("Slice 4", 40.0);
-    *m_iSeries << new CustomSlice("Slice 5", 50.0);
+//    *m_iSeries << new CustomSlice("Slice 1", 10.0);
+//    *m_iSeries << new CustomSlice("Slice 2", 20.0);
+//    *m_iSeries << new CustomSlice("Slice 3", 30.0);
+//    *m_iSeries << new CustomSlice("Slice 4", 40.0);
+//    *m_iSeries << new CustomSlice("Slice 5", 50.0);
 }
 

@@ -63,7 +63,7 @@ Account::Account(const QString& name, QObject *parent)
 {
 
     printf("da_acc_malloc\n");
-    this->currency = HomeWallet::Instance()->kcur;
+    this->currency = Preferences::Instance()->currency;
 
     id = "";
     flags = 0;
@@ -252,11 +252,6 @@ quint32 maxkey, i;*/
 
     printf(" - set for '%s'\n", this->name.toStdString().c_str());
 
-	//#1673260 internal transfer with different currency
-    /*maxkey = Account::get_max_key () + 1;
-	xfer_list = g_malloc0(sizeof(bool) * maxkey );
-    printf(" - alloc for %d account\n", HomeWallet::Instance()->h_acc.size() ) );*/
-
     QQueue<QSharedPointer<Transaction> >::const_iterator tIter = this->txn_queue.constBegin();
     while (tIter != this->txn_queue.constEnd()) {
         Transaction *txn = tIter->get();
@@ -326,27 +321,6 @@ void Account::compute_balances(const QString& accID)
         acc->save_to_local();
         delete acc;
     }
-}
-
-
-void Account::convert_euro()
-{
-    QQueue<QSharedPointer<Transaction> >::const_iterator tIter = this->txn_queue.constBegin();
-    while (tIter != this->txn_queue.constEnd()) {
-        Transaction *txn = tIter->get();
-        double oldamount = txn->amount;
-
-        txn->amount = hb_amount_to_euro(oldamount);
-        printf("%10.6f => %10.6f, %s\n", oldamount, txn->amount, txn->memo.toStdString().c_str() );
-        //todo: sync child xfer
-
-        ++tIter;
-    }
-
-    this->initial = hb_amount_to_euro(this->initial);
-//	this->warning = hb_amount_to_euro(acc->warning);
-    this->minimum = hb_amount_to_euro(this->minimum);
-    this->maximum = hb_amount_to_euro(this->maximum);
 }
 
 void Account::update_to_local(Account *acc)

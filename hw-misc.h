@@ -21,7 +21,7 @@
 #define __HB_MISC__H__
 
 #include <QtGlobal>
-
+#include <QStringList>
 
 enum
 {
@@ -79,7 +79,6 @@ enum {
 
 double hb_amount_round(const double x, int n);
 double hb_amount_base(double value, qint32 kcur);
-double hb_amount_to_euro(double amount);
 bool hb_amount_type_match(double amount, int type);
 bool hb_amount_equal(double val1, double val2);
 int hb_amount_compare(double val1, double val2);

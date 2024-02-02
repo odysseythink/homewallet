@@ -6,10 +6,12 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    HomeWallet::Instance();
-    Preferences::Instance();
+    qInstallMessageHandler(LogHandler);
+    qDebug() << QString("%1-v%2 starting......").arg(PROGNAME).arg(HW_VERSION);
     MainWin w;
     w.show();
 
-    return a.exec();
+    auto nret = a.exec();
+    delete Preferences::Instance();
+    return nret;
 }

@@ -98,7 +98,6 @@ public:
     bool has_website();
     void set_currency(const QString currency);
     static void compute_balances(const QString& acc = "");
-    void convert_euro();
     static void update_to_local(Account* acc);
     static void del_from_local(Account* acc);
     static QList<QSharedPointer<Account>> get_all_by_type(int type = ACC_TYPE_MAXVALUE);

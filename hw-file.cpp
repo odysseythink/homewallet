@@ -83,18 +83,7 @@ const char* properties_create_sql = "CREATE TABLE t_properties ("
 */
 static int homebank_save_xml_prop()
 {
-    if (!IHWFileIO::table_exists("t_properties")){
-        QSqlQuery query;
-        query.exec(properties_create_sql);
-    }
-    int retval = 0;
-    QString title = HomeWallet::Instance()->owner == NULL ? "" : HomeWallet::Instance()->owner;
-    QString sql = QString("REPLACE INTO t_properties (id, title, currency,vehicle_category,auto_smode, auto_weekday,auto_nbmonths, auto_nbdays) values ('1', '%1', '%2', '%3', %4,%5,%6,%7);").arg(title).arg(HomeWallet::Instance()->kcur).arg(HomeWallet::Instance()->vehicle_category).arg(HomeWallet::Instance()->auto_smode).arg(HomeWallet::Instance()->auto_weekday).arg(HomeWallet::Instance()->auto_nbmonths).arg(HomeWallet::Instance()->auto_nbdays);
-    QSqlQuery query;
-    if (!query.exec(sql)) {
-        retval = -2;
-    }
-    return retval;
+    return 0;
 }
 
 /*
@@ -102,19 +91,7 @@ static int homebank_save_xml_prop()
 */
 static int homebank_save_xml_cur(QSqlDatabase& DB)
 {
-    int retval = 0;
-    QMap<QString, QSharedPointer<Currency> >::const_iterator iter = HomeWallet::Instance()->h_cur.constBegin();
-    while (iter != HomeWallet::Instance()->h_cur.constEnd()) {
-        Currency* item = iter.value().get();
-        if(item != nullptr){
-            retval = item->save(DB);
-            if (retval != 0) {
-                break;
-            }
-        }
-        ++iter;
-    }
-    return retval;
+    return 0;
 }
 
 /*
@@ -122,19 +99,7 @@ static int homebank_save_xml_cur(QSqlDatabase& DB)
 */
 static int homebank_save_xml_grp(QSqlDatabase& DB)
 {
-    int retval = 0;
-    QMap<QString, QSharedPointer<Group> >::const_iterator iter = HomeWallet::Instance()->h_grp.constBegin();
-    while (iter != HomeWallet::Instance()->h_grp.constEnd()) {
-        Group* item = iter.value().get();
-        if(item != nullptr){
-            retval = item->save(DB);
-            if (retval != 0) {
-                break;
-            }
-        }
-        ++iter;
-    }
-    return retval;
+    return 0;
 }
 
 /*
@@ -142,19 +107,7 @@ static int homebank_save_xml_grp(QSqlDatabase& DB)
 */
 static int homebank_save_xml_acc(QSqlDatabase& DB)
 {
-    int retval = 0;
-    QMap<QString, QSharedPointer<Account> >::const_iterator iter = HomeWallet::Instance()->h_acc.constBegin();
-    while (iter != HomeWallet::Instance()->h_acc.constEnd()) {
-        Account* item = iter.value().get();
-        if(item != nullptr){
-            retval = item->save(DB);
-            if (retval != 0) {
-                break;
-            }
-        }
-        ++iter;
-    }
-    return retval;
+    return 0;
 }
 
 /*
@@ -162,19 +115,7 @@ static int homebank_save_xml_acc(QSqlDatabase& DB)
 */
 static int homebank_save_xml_pay(QSqlDatabase& DB)
 {
-    int retval = 0;
-    QMap<QString, QSharedPointer<Payee> >::const_iterator iter = HomeWallet::Instance()->h_pay.constBegin();
-    while (iter != HomeWallet::Instance()->h_pay.constEnd()) {
-        Payee* item = iter.value().get();
-        if(item != nullptr){
-            retval = item->save(DB);
-            if (retval != 0) {
-                break;
-            }
-        }
-        ++iter;
-    }
-    return retval;
+    return 0;
 }
 
 /*
@@ -182,19 +123,7 @@ static int homebank_save_xml_pay(QSqlDatabase& DB)
 */
 static int homebank_save_xml_cat(QSqlDatabase& DB)
 {
-    int retval = 0;
-    QMap<QString, QSharedPointer<Category> >::const_iterator iter = HomeWallet::Instance()->h_cat.constBegin();
-    while (iter != HomeWallet::Instance()->h_cat.constEnd()) {
-        Category* item = iter.value().get();
-        if(item != nullptr){
-            retval = item->save(DB);
-            if (retval != 0) {
-                break;
-            }
-        }
-        ++iter;
-    }
-    return retval;
+    return 0;
 }
 
 /*
@@ -202,19 +131,7 @@ static int homebank_save_xml_cat(QSqlDatabase& DB)
 */
 static int homebank_save_xml_tag(QSqlDatabase& DB)
 {
-    int retval = 0;
-    QMap<QString, QSharedPointer<Tag> >::const_iterator iter = HomeWallet::Instance()->h_tag.constBegin();
-    while (iter != HomeWallet::Instance()->h_tag.constEnd()) {
-        Tag* item = iter.value().get();
-        if(item != nullptr){
-            retval = item->save(DB);
-            if (retval != 0) {
-                break;
-            }
-        }
-        ++iter;
-    }
-    return retval;
+    return 0;
 }
 
 
@@ -223,19 +140,7 @@ static int homebank_save_xml_tag(QSqlDatabase& DB)
 */
 static int homebank_save_xml_asg(QSqlDatabase& DB)
 {
-    int retval = 0;
-    QMap<QString, QSharedPointer<Assign> >::const_iterator iter = HomeWallet::Instance()->h_rul.constBegin();
-    while (iter != HomeWallet::Instance()->h_rul.constEnd()) {
-        Assign* item = iter.value().get();
-        if(item != nullptr){
-            retval = item->save(DB);
-            if (retval != 0) {
-                break;
-            }
-        }
-        ++iter;
-    }
-    return retval;
+    return 0;
 }
 
 
@@ -244,46 +149,17 @@ static int homebank_save_xml_asg(QSqlDatabase& DB)
 */
 static int homebank_save_xml_arc(QSqlDatabase& DB)
 {
-    int retval = 0;
-    QList<QSharedPointer<Archive> >::const_iterator iter = HomeWallet::Instance()->arc_list.constBegin();
-    while (iter != HomeWallet::Instance()->arc_list.constEnd()) {
-        Archive* item = iter->get();
-        if(item != nullptr){
-            retval = item->save(DB);
-            if (retval != 0) {
-                break;
-            }
-        }
-        ++iter;
-    }
-    return retval;
+    return 0;
 }
 
 
 static int homebank_save_xml_ope(QSqlDatabase& DB)
 {
-    int retval = 0;
-    QMap<QString, QSharedPointer<Account> >::const_iterator acciter = HomeWallet::Instance()->h_acc.constBegin();
-    while (acciter != HomeWallet::Instance()->h_acc.constEnd()) {
-        Account* acc = acciter.value().get();
-        QList<QSharedPointer<Transaction> >::const_iterator transiter = acc->txn_queue.constBegin();
-        while (transiter != acc->txn_queue.constEnd()) {
-            Transaction *item = transiter->get();
-            if(item != nullptr){
-                retval = item->save(DB);
-                if (retval != 0) {
-                    break;
-                }
-            }
-            ++transiter;
-        }
-        ++acciter;
-    }
-    return retval;
+    return 0;
 }
 
 /*
-** XML save homebank file: hbfile
+** XML save homewallet file: hbfile
 */
 int homebank_save_xml(const QString filename)
 {

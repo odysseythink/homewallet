@@ -5,7 +5,7 @@
 /* #undef ENABLE_NLS */
 
 /* gettext domain */
-#define GETTEXT_PACKAGE "homebank"
+#define GETTEXT_PACKAGE "homewallet"
 
 /* Define to 1 if you have the `bind_textdomain_codeset' function. */
 /* #undef HAVE_BIND_TEXTDOMAIN_CODESET */
@@ -97,19 +97,19 @@
 #define HAVE__BOOL 1
 
 /* Name of package */
-#define PACKAGE "homebank"
+#define PACKAGE "homewallet"
 
 /* Define to the address where bug reports for this package should be sent. */
 #define PACKAGE_BUGREPORT ""
 
 /* Define to the full name of this package. */
-#define PACKAGE_NAME "homebank"
+#define PACKAGE_NAME "homewallet"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "homebank 5.7.2"
+#define PACKAGE_STRING "homewallet 5.7.2"
 
 /* Define to the one symbol short name of this package. */
-#define PACKAGE_TARNAME "homebank"
+#define PACKAGE_TARNAME "homewallet"
 
 /* Define to the home page for this package. */
 #define PACKAGE_URL ""

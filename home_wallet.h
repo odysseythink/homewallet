@@ -48,33 +48,33 @@ typedef enum {
 #define HB_UNSTABLE_SHOW	FALSE
 
 
-#define HOMEBANK_MAJOR	5
-#define HOMEBANK_MINOR	7
-#define HOMEBANK_MICRO	2
+#define HOMEWALLET_MAJOR	0
+#define HOMEWALLET_MINOR	0
+#define HOMEWALLET_MICRO	1
 
-#define HB_VERSION		"5.7.2"
-#define HB_VERSION_NUM	(HOMEBANK_MAJOR*10000) + (HOMEBANK_MINOR*100) + HOMEBANK_MICRO
+#define HW_VERSION		"0.0.1"
+#define HW_VERSION_NUM	(HOMEWALLET_MAJOR*10000) + (HOMEWALLET_MINOR*100) + HOMEWALLET_MICRO
 
 #define FILE_VERSION		1.4
 #define PREF_VERSION		572
 
 #if HB_UNSTABLE == FALSE
-    #define	PROGNAME		"HomeBank"
-    #define HB_DATA_PATH	"homebank"
+    #define	PROGNAME		"homewallet"
+    #define HB_DATA_PATH	"homewallet"
 #else
-    #define	PROGNAME		"HomeBank " HB_VERSION " (unstable)"
-    #define HB_DATA_PATH	"homebank_unstable"
+    #define	PROGNAME		"homewallet " HW_VERSION " (unstable)"
+    #define HB_DATA_PATH	"homewallet_unstable"
 #endif
 
 
 #ifdef Q_OS_WIN
-    #define GETTEXT_PACKAGE "homebank"
+    #define GETTEXT_PACKAGE "homewallet"
     #define LOCALE_DIR      "locale"
     #define PIXMAPS_DIR     "images"
     #define HELP_DIR        "help"
-    #define PACKAGE_VERSION HB_VERSION
-    #define PACKAGE         "homebank"
-    #define VERSION         HB_VERSION
+    #define PACKAGE_VERSION HW_VERSION
+    #define PACKAGE         "homewallet"
+    #define VERSION         HW_VERSION
 
     //#define PORTABLE_APP
     //#define NOOFX
@@ -127,7 +127,7 @@ enum
 typedef enum
 {
     FILETYPE_UNKNOWN,
-    FILETYPE_HOMEBANK,
+    FILETYPE_HOMEWALLET,
     FILETYPE_OFX,
     FILETYPE_QIF,
     FILETYPE_CSV_HB,
@@ -205,7 +205,7 @@ typedef enum
 #define ICONNAME_HB_TEXT_REGEX		"text-regularexpression-symbolic"
 
 
-/* -------- named icons (Custom to homebank) -------- */
+/* -------- named icons (Custom to homewallet) -------- */
 
 
 #define ICONNAME_HB_CURRENCY		"hb-currency"
@@ -316,6 +316,8 @@ typedef enum
     REPORT_RESULT_BALANCE,
 } HbReportResult;
 
+
+
 class HomeWallet : public QObject
 {
     Q_OBJECT
@@ -328,75 +330,13 @@ public:
         return m_iInstance;
     }
     bool setup();
-    QString app_get_config_dir(){return config_dir;}
-    QString app_get_images_dir(){return images_dir;}
-    QString app_get_pixmaps_dir(){return pixmaps_dir;}
-    QString app_get_locale_dir(){return locale_dir;}
-    QString app_get_help_dir(){return help_dir;}
-    QString app_get_datas_dir(){return datas_dir;}
-    void file_ensure_xhb(QString filename);
-    void backup_current_file();
 
 private:
     HomeWallet(QObject *parent = nullptr);
     ~HomeWallet();
-    void __build_package_paths ();
-    void __check_app_dir();
     bool __check_app_dir_migrate_file(QString srcdir, QString dstdir, QString filename);
-    bool __file_delete_existing(const QString filepath);
-    bool __file_copy(const QString srcfile, const QString dstfile);
 
 public:
-    // hbfile storage
-    QMap<QString, QSharedPointer<Currency> > h_cur;			//currencies
-    QMap<QString, QSharedPointer<Group> > h_grp;			//groups
-
-    QMap<QString, QSharedPointer<Account> > h_acc;			//accounts
-    QMap<QString, QSharedPointer<Payee> > h_pay;			//payees
-    QMap<QString, QSharedPointer<Category> >		h_cat;			//categories
-
-    QMap<QString, QSharedPointer<Assign> > h_rul;			//assign rules
-    QMap<QString, QSharedPointer<Tag> > h_tag;			//tags
-
-
-    QSet<QString>		h_memo;		//memo/description
-
-    QList<QSharedPointer<Archive> >			arc_list;		//scheduled/template
-
-    //#1419304 we keep the deleted txn to a stack trash
-////	GTrashStack		*txn_stk;
-//	GSList			*openwindows;	//added 5.5.1
-    QList<QSharedPointer<Transaction> >			deltxn_list;
-
-    // hbfile (saved properties)
-    QString			owner;
-    short			auto_smode;
-    short			auto_weekday;
-    short			auto_nbmonths;
-    short			auto_nbdays;
-
-    quint32			vehicle_category;
-    QString			kcur;			// base currency
-
-    // hbfile (unsaved properties)
-    unsigned int			changes_count;
-    bool		hbfile_is_new;
-    bool		hbfile_is_bak;
-    bool		xhb_hasrevert;		//file has backup (*.xhw~) used for revert menu sensitivity
-    quint64			xhb_timemodified;
-    bool		xhb_obsoletecurr;
-
-    // really global stuffs
-    bool		first_run;
-    quint32			today;			//today's date
-    int			define_off;		//>0 when a stat, account window is opened
-    bool		minor;
-
-    QWidget		*mainwindow;	//should be global to access attached window data
-    QWidget		*alltxnwindow;	//window to mutex all txn show
-//	GtkIconTheme	*icontheme;
-    //GdkPixbuf		*lst_pixbuf[NUM_LST_PIXBUF];
-    //int			lst_pixbuf_maxwidth;
 
 public:
     static QString CHART_CATEGORY;
@@ -435,12 +375,7 @@ public:
 
 private:
     static HomeWallet* m_iInstance;
-    QString config_dir ;
-    QString images_dir ;
-    QString pixmaps_dir;
-    QString locale_dir ;
-    QString help_dir   ;
-    QString datas_dir  ;
+    bool		first_run;
 };
 
 
